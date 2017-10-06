@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Resources -->
+    <string name="app_name">PocketWeather</string>
+    <string name="celsius_text">\u00B0C to \u00B0F</string>
+
+    <!--WeatherModel fonts -->
+    <string name="sunny_icon">&#xf00d;</string>
+    <string name="clear_night_icon">&#xf02e;</string>
+    <string name="foggy_icon">&#xf014;</string>
+    <string name="cloudy_icon">&#xf013;</string>
+    <string name="rainy_icon">&#xf019;</string>
+    <string name="snowy_icon">&#xf01b;</string>
+    <string name="thunder_icon">&#xf01e;</string>
+    <string name="drizzle_icon">&#xf01c;</string>
+    <string name="earthquake_icon">&#xf0c6;</string>
+
+    <string name="no_data_icon">&#xf03e;</string>
+    <string name="getting_data_icon">&#xf03d;</string>
+
+</resources>

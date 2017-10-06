@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Image sizes-->
+    <dimen name="icon_size">105sp</dimen>
+
+    <!--Text sizes-->
+    <dimen name="text_small">20sp</dimen>
+    <dimen name="text_large">30sp</dimen>
+    <dimen name="text_medium">25sp</dimen>
+
+</resources>
