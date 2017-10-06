@@ -42,11 +42,12 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
     };
 
     private ShakeDetector sd;
-    private SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Don't know if this is a good idea. Don't think so
+    private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         setContentView(R.layout.activity_main);
         setupShakeSensor();
         final ImageView joke = findViewById(R.id.iv_wrongDegrees);
