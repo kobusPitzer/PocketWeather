@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Resources -->
-    <string name="app_name">PocketWeather</string>
+    <string name="app_name">Pocket \n Weather</string>
     <string name="celsius_text">\u00B0C to \u00B0F</string>
     <string name="celsius_description_text">Degrees Celsius to Fahrenheit</string>
 
