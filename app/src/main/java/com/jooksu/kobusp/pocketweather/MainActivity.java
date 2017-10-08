@@ -1,16 +1,19 @@
 package com.jooksu.kobusp.pocketweather;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -37,7 +40,10 @@ import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProv
 
 import static com.squareup.seismic.ShakeDetector.SENSITIVITY_LIGHT;
 
-public class MainActivity extends AppCompatActivity implements ShakeDetector.Listener, OnLocationUpdatedListener, OnActivityUpdatedListener {
+public class MainActivity extends AppCompatActivity implements
+        ShakeDetector.Listener,
+        OnLocationUpdatedListener,
+        OnActivityUpdatedListener {
 
     private static final int LOCATION_PERMISSION_ID = 1001;
 
@@ -56,8 +62,9 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
     private ShakeDetector sd;
     private SensorManager sensorManager;
-    private LocationGooglePlayServicesProvider provider;
     private TextSwitcher weatherIcon;
+    private SmartLocation smartLocation;
+    private boolean dialogIsShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
                 joke.setVisibility(View.VISIBLE);
             }
         });
-        Button getWeather = findViewById(R.id.button);
 
         weatherIcon = findViewById(R.id.tv_weatherIcon);
         Animation in = AnimationUtils.loadAnimation(this,
@@ -93,24 +99,6 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
 
         weatherIcon.setFactory(mFactory);
-        getWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                weatherIcon.setText(getString(R.string.getting_data_icon));
-                RestClient.getWeather(25.7, 28.7,MainActivity.this, new OnSuccessCallback<WeatherModel>() {
-                    @Override
-                    public void onSuccess(WeatherModel weatherModel) {
-                        populateScreen(weatherModel);
-                    }
-                }, new OnErrorCallback() {
-                    @Override
-                    public void onError(String message) {
-                        message.toString();
-                    }
-                });
-
-            }
-        });
 
     }
 
@@ -119,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
             return;
         }
-        provider = new LocationGooglePlayServicesProvider();
+        LocationGooglePlayServicesProvider provider = new LocationGooglePlayServicesProvider();
         provider.setCheckLocationSettings(true);
 
-        SmartLocation smartLocation = new SmartLocation.Builder(this).logging(true).build();
+        smartLocation = new SmartLocation.Builder(this).logging(true).build();
 
         smartLocation.location(provider).start(this);
         smartLocation.activity().start(this);
@@ -131,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
     @Override
     protected void onPause() {
         if (sd != null)
-        sd.stop();
+            sd.stop();
         super.onPause();
     }
 
@@ -144,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
     private void getLocationWeather(Location location) {
         weatherIcon.setText(getString(R.string.getting_data_icon));
-        RestClient.getWeather(location.getLongitude(),location.getLatitude(),  MainActivity.this, new OnSuccessCallback<WeatherModel>() {
+        RestClient.getWeather(location.getLongitude(), location.getLatitude(), MainActivity.this, new OnSuccessCallback<WeatherModel>() {
             @Override
             public void onSuccess(WeatherModel weatherModel) {
                 populateScreen(weatherModel);
@@ -163,9 +151,35 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
     }
 
-    @Override public void hearShake() {
+    @Override
+    public void hearShake() {
         TextSwitcher weatherIcon = findViewById(R.id.tv_weatherIcon);
         weatherIcon.setText(getString(R.string.earthquake_icon));
+        if (!dialogIsShown)
+            showAskForUpdate();
+    }
+
+    private void showAskForUpdate(){
+        dialogIsShown = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(R.string.shake_detected)
+                .setMessage(R.string.shake_detected)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        weatherIcon.setText(getString(R.string.getting_data_icon));
+                        smartLocation.with(MainActivity.this).location().oneFix().start(MainActivity.this);
+                        dialogIsShown = false;
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogIsShown = false;
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void setupShakeSensor() {

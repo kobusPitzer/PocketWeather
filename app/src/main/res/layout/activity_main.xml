@@ -8,11 +8,6 @@
     android:clickable="true"
     tools:context="com.jooksu.kobusp.pocketweather.MainActivity"
     android:id="@+id/constraint">
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Z Weather"/>
 
     <TextView
         android:id="@+id/tv_date"
@@ -83,6 +78,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintDimensionRatio="H1,1"/>
+        app:layout_constraintDimensionRatio="H1,1"
+        android:contentDescription="@string/celsius_description_text" />
 
 </android.support.constraint.ConstraintLayout>

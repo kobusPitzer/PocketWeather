@@ -3,6 +3,7 @@
     <!--Resources -->
     <string name="app_name">PocketWeather</string>
     <string name="celsius_text">\u00B0C to \u00B0F</string>
+    <string name="celsius_description_text">Degrees Celsius to Fahrenheit</string>
 
     <!--WeatherModel fonts -->
     <string name="sunny_icon">&#xf00d;</string>
@@ -17,5 +18,8 @@
 
     <string name="no_data_icon">&#xf03e;</string>
     <string name="getting_data_icon">&#xf03d;</string>
+    <string name="ok">Why not</string>
+    <string name="cancel">No thanks</string>
+    <string name="shake_detected">Things seem shaky. Want an update?</string>
 
 </resources>
