@@ -25,11 +25,12 @@ public class RestClient {
             final OnSuccessCallback<WeatherModel> successCallback,
             final OnErrorCallback errorCallback) {
         String url = BASE_URL;
-        Log.d(TAG, url);
+        Log.d(TAG, "URL: "+url);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
+                    Log.d(TAG,"Response: "+ response);
                     Gson gson = new Gson();
                     WeatherModel weatherModelData = gson.fromJson(response, WeatherModel.class);
 
