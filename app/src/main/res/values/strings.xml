@@ -17,6 +17,7 @@
     <string name="earthquake_icon">&#xf0c6;</string>
 
     <string name="no_data_icon">&#xf03e;</string>
+    <string name="problem">&#xf075;</string>
     <string name="getting_data_icon">&#xf03d;</string>
     <string name="ok">Why not</string>
     <string name="cancel">No thanks</string>

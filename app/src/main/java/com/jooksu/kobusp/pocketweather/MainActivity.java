@@ -1,13 +1,13 @@
 package com.jooksu.kobusp.pocketweather;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -32,6 +31,11 @@ import com.jooksu.kobusp.pocketweather.constants.WEATHER_TYPES;
 import com.jooksu.kobusp.pocketweather.models.Weather.WeatherInformation;
 import com.jooksu.kobusp.pocketweather.models.Weather.WeatherModel;
 import com.squareup.seismic.ShakeDetector;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import io.nlopez.smartlocation.OnActivityUpdatedListener;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int LOCATION_PERMISSION_ID = 1001;
 
-    private ViewSwitcher.ViewFactory mFactory = new ViewSwitcher.ViewFactory() {
+    private final ViewSwitcher.ViewFactory mFactory = new ViewSwitcher.ViewFactory() {
 
         @Override
         public View makeView() {
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements
             TextView t = new TextView(MainActivity.this);
             t.setTypeface(Typeface.createFromAsset(getAssets(), "weatherFont.ttf"));
             t.setTextSize(getResources().getDimension(R.dimen.icon_size));
+            t.setText(getString(R.string.no_data_icon));
             t.setTextColor(Color.parseColor("#DADADA")); //Minimum API level screws us over here a bit
             return t;
         }
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextSwitcher weatherIcon;
     private SmartLocation smartLocation;
     private boolean dialogIsShown = false;
+    private LocationGooglePlayServicesProvider provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joke.setVisibility(View.INVISIBLE);
+                joke.setVisibility(View.GONE);
+                hideText(false);
             }
         });
         TextView tv_celsius = findViewById(R.id.tv_celsius);
@@ -85,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 joke.setVisibility(View.VISIBLE);
+                hideText(true);
             }
         });
 
@@ -102,12 +110,34 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    private void hideText(boolean isHidden) {
+        TextView tvPlace = findViewById(R.id.tv_place);
+        TextView tvMin = findViewById(R.id.tv_min);
+        TextView tvMax = findViewById(R.id.tv_max);
+        TextView tvDate = findViewById(R.id.tv_date);
+        TextView tvCelsius = findViewById(R.id.tv_celsius);
+        if (isHidden) {
+            tvPlace.setVisibility(View.INVISIBLE);
+            tvMin.setVisibility(View.INVISIBLE);
+            tvMax.setVisibility(View.INVISIBLE);
+            tvDate.setVisibility(View.INVISIBLE);
+            tvCelsius.setVisibility(View.INVISIBLE);
+        }
+        else {
+            tvPlace.setVisibility(View.VISIBLE);
+            tvMin.setVisibility(View.VISIBLE);
+            tvMax.setVisibility(View.VISIBLE);
+            tvDate.setVisibility(View.VISIBLE);
+            tvCelsius.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void setupLocation() {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
             return;
         }
-        LocationGooglePlayServicesProvider provider = new LocationGooglePlayServicesProvider();
+        provider = new LocationGooglePlayServicesProvider();
         provider.setCheckLocationSettings(true);
 
         smartLocation = new SmartLocation.Builder(this).logging(true).build();
@@ -120,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPause() {
         if (sd != null)
             sd.stop();
+        if (smartLocation != null)
+            smartLocation.activity().stop();
         super.onPause();
     }
 
@@ -128,38 +160,71 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         if (sd != null)
             sd.start(sensorManager);
+        if (smartLocation != null)
+            smartLocation.location(provider).start(this);
     }
 
-    private void getLocationWeather(Location location) {
+    private void getLocationWeather(final Location location) {
         weatherIcon.setText(getString(R.string.getting_data_icon));
         RestClient.getWeather(location.getLongitude(), location.getLatitude(), MainActivity.this, new OnSuccessCallback<WeatherModel>() {
             @Override
             public void onSuccess(WeatherModel weatherModel) {
-                populateScreen(weatherModel);
+                populateScreen(weatherModel, location);
             }
         }, new OnErrorCallback() {
             @Override
             public void onError(String message) {
-                message.toString();
+                showEmptyErrorScreen();
             }
         });
     }
 
-    private void populateScreen(WeatherModel weatherModel) {
-        TextSwitcher weatherIcon = findViewById(R.id.tv_weatherIcon);
-        weatherIcon.setText(getWeatherIcon(weatherModel.getWeatherInformation()[0]));
+    private void showEmptyErrorScreen() {
+        weatherIcon.setText(getString(R.string.problem));
+    }
+
+    private String getLocationName(WeatherModel weatherModel, Location location) {
+        String placeName;
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            placeName = addresses.get(0).getSubLocality() + ", " + addresses.get(0).getLocality() + ", \n" + addresses.get(0).getCountryName();
+        } catch (Exception e) {
+            placeName = weatherModel.getName() + "," + weatherModel.getLocationInformation().getCountry();
+            return placeName;
+        }
+        return placeName;
+    }
+
+    private void populateScreen(WeatherModel weatherModel, Location location) {
+        weatherIcon = findViewById(R.id.tv_weatherIcon);
+        weatherIcon.setText(getWeatherIcon(weatherModel));
+        TextView tvPlace = findViewById(R.id.tv_place);
+        TextView tvMin = findViewById(R.id.tv_min);
+        TextView tvMax = findViewById(R.id.tv_max);
+        TextView tvDate = findViewById(R.id.tv_date);
+
+
+        tvPlace.setText(getLocationName(weatherModel, location));
+        tvMin.setText("Minimum is " + weatherModel.getLocationWeatherDetails().getMinTemperature());
+        tvMax.setText("Maximum is " + weatherModel.getLocationWeatherDetails().getMaxTemperature());
+        SimpleDateFormat format = new SimpleDateFormat("EEE, MMM d", Locale.ENGLISH);
+        tvDate.setText(format.format(new Date()));
 
     }
 
     @Override
     public void hearShake() {
-        TextSwitcher weatherIcon = findViewById(R.id.tv_weatherIcon);
+        weatherIcon = findViewById(R.id.tv_weatherIcon);
         weatherIcon.setText(getString(R.string.earthquake_icon));
         if (!dialogIsShown)
             showAskForUpdate();
     }
 
-    private void showAskForUpdate(){
+    private void showAskForUpdate() {
         dialogIsShown = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(R.string.shake_detected)
@@ -188,9 +253,17 @@ public class MainActivity extends AppCompatActivity implements
         sd.setSensitivity(SENSITIVITY_LIGHT);
     }
 
-    private String getWeatherIcon(WeatherInformation weatherInformation) {
-        if (weatherInformation.getId() == WEATHER_TYPES.Clear)
-            return getString(R.string.sunny_icon);
+    private String getWeatherIcon(WeatherModel weatherModel) {
+        WeatherInformation weatherInformation = weatherModel.getWeatherInformation()[0];
+        if (weatherInformation.getId() == WEATHER_TYPES.Clear) {
+            long now = new Date().getTime() / 1000L; //UNIX time conversion
+            long sunrise = weatherModel.getLocationInformation().getSunrise();
+            long sunset = weatherModel.getLocationInformation().getSunset();
+            if ((now > sunrise) && (now < sunset))
+                return getString(R.string.sunny_icon);
+            return getString(R.string.clear_night_icon);
+        }
+
         int id = weatherInformation.getId() / 100;
         String icon;
         switch (id) {
