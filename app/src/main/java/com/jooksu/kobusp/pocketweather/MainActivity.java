@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements
     private ShakeDetector sd;
     private SensorManager sensorManager;
     private TextSwitcher weatherIcon;
+    private TextView tvPlace = findViewById(R.id.tv_place);
+    private TextView tvMin = findViewById(R.id.tv_min);
+    private TextView tvMax = findViewById(R.id.tv_max);
+    private TextView tvDate = findViewById(R.id.tv_date);
+    private TextView tvCelsius = findViewById(R.id.tv_celsius);
     private SmartLocation smartLocation;
     private boolean dialogIsShown = false;
     private LocationGooglePlayServicesProvider provider;
@@ -87,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements
                 hideText(false);
             }
         });
-        TextView tv_celsius = findViewById(R.id.tv_celsius);
-        tv_celsius.setOnClickListener(new View.OnClickListener() {
+        tvCelsius = findViewById(R.id.tv_celsius);
+        tvCelsius.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 joke.setVisibility(View.VISIBLE);
@@ -111,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void hideText(boolean isHidden) {
-        TextView tvPlace = findViewById(R.id.tv_place);
-        TextView tvMin = findViewById(R.id.tv_min);
-        TextView tvMax = findViewById(R.id.tv_max);
-        TextView tvDate = findViewById(R.id.tv_date);
-        TextView tvCelsius = findViewById(R.id.tv_celsius);
+        tvPlace = findViewById(R.id.tv_place);
+        tvMin = findViewById(R.id.tv_min);
+        tvMax = findViewById(R.id.tv_max);
+        tvDate = findViewById(R.id.tv_date);
+        tvCelsius = findViewById(R.id.tv_celsius);
         if (isHidden) {
             tvPlace.setVisibility(View.INVISIBLE);
             tvMin.setVisibility(View.INVISIBLE);
@@ -202,10 +207,10 @@ public class MainActivity extends AppCompatActivity implements
     private void populateScreen(WeatherModel weatherModel, Location location) {
         weatherIcon = findViewById(R.id.tv_weatherIcon);
         weatherIcon.setText(getWeatherIcon(weatherModel));
-        TextView tvPlace = findViewById(R.id.tv_place);
-        TextView tvMin = findViewById(R.id.tv_min);
-        TextView tvMax = findViewById(R.id.tv_max);
-        TextView tvDate = findViewById(R.id.tv_date);
+        tvPlace = findViewById(R.id.tv_place);
+        tvMin = findViewById(R.id.tv_min);
+        tvMax = findViewById(R.id.tv_max);
+        tvDate = findViewById(R.id.tv_date);
 
 
         tvPlace.setText(getLocationName(weatherModel, location));
