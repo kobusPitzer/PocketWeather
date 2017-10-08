@@ -16,11 +16,16 @@
     <string name="drizzle_icon">&#xf01c;</string>
     <string name="earthquake_icon">&#xf0c6;</string>
 
+    <!--Screen icons -->
     <string name="no_data_icon">&#xf03e;</string>
     <string name="problem">&#xf075;</string>
     <string name="getting_data_icon">&#xf03d;</string>
+
+    <!--User text-->
     <string name="ok">Why not</string>
     <string name="cancel">No thanks</string>
     <string name="shake_detected">Things seem shaky. Want an update?</string>
+    <string name="min_temperature">Min of %1$d</string>
+    <string name="max_temperature">Max of %1$d</string>
 
 </resources>

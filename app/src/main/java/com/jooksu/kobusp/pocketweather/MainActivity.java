@@ -209,8 +209,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         tvPlace.setText(getLocationName(weatherModel, location));
-        tvMin.setText("Minimum is " + weatherModel.getLocationWeatherDetails().getMinTemperature());
-        tvMax.setText("Maximum is " + weatherModel.getLocationWeatherDetails().getMaxTemperature());
+        tvMin.setText(getString(R.string.min_temperature,Math.round(weatherModel.getLocationWeatherDetails().getMinTemperature())));
+        tvMax.setText(getString(R.string.max_temperature,Math.round(weatherModel.getLocationWeatherDetails().getMaxTemperature())));
         SimpleDateFormat format = new SimpleDateFormat("EEE, MMM d", Locale.ENGLISH);
         tvDate.setText(format.format(new Date()));
 
