@@ -17,14 +17,16 @@ import com.jooksu.kobusp.pocketweather.models.Weather.WeatherModel;
 
 public class RestClient {
 
-    private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lat=-25.748&lon=28.2763&appid=fff4bb02b667131f38d43b6a81c9c1aa";
+    private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&appid=fff4bb02b667131f38d43b6a81c9c1aa";
     private static final String TAG = "RestClient";
 
     public static void getWeather(
+            double longitude,
+            double latitude,
             final Context context,
             final OnSuccessCallback<WeatherModel> successCallback,
             final OnErrorCallback errorCallback) {
-        String url = BASE_URL;
+        String url = BASE_URL + "&lat=" + latitude + "&lon=" + longitude;
         Log.d(TAG, "URL: "+url);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override

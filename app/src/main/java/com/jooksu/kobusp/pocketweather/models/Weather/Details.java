@@ -11,8 +11,8 @@ public class Details{
 
     @SerializedName(value="temperature", alternate={"temp"})
     private float temperature;
-    private int pressure;
-    private int humidity;
+    private double pressure;
+    private double humidity;
     @SerializedName(value="minTemperature", alternate={"temp_min"})
     private float minTemperature;
     @SerializedName(value="maxTemperature", alternate={"temp_max"})
@@ -22,11 +22,11 @@ public class Details{
         return temperature;
     }
 
-    public int getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
-    public int getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 

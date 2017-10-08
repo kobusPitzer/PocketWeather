@@ -1,11 +1,16 @@
 package com.jooksu.kobusp.pocketweather;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +21,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.location.DetectedActivity;
 import com.jooksu.kobusp.pocketweather.api.OnErrorCallback;
 import com.jooksu.kobusp.pocketweather.api.OnSuccessCallback;
 import com.jooksu.kobusp.pocketweather.api.RestClient;
@@ -24,9 +30,16 @@ import com.jooksu.kobusp.pocketweather.models.Weather.WeatherInformation;
 import com.jooksu.kobusp.pocketweather.models.Weather.WeatherModel;
 import com.squareup.seismic.ShakeDetector;
 
+import io.nlopez.smartlocation.OnActivityUpdatedListener;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider;
+
 import static com.squareup.seismic.ShakeDetector.SENSITIVITY_LIGHT;
 
-public class MainActivity extends AppCompatActivity implements ShakeDetector.Listener {
+public class MainActivity extends AppCompatActivity implements ShakeDetector.Listener, OnLocationUpdatedListener, OnActivityUpdatedListener {
+
+    private static final int LOCATION_PERMISSION_ID = 1001;
 
     private ViewSwitcher.ViewFactory mFactory = new ViewSwitcher.ViewFactory() {
 
@@ -43,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
     private ShakeDetector sd;
     private SensorManager sensorManager;
+    private LocationGooglePlayServicesProvider provider;
+    private TextSwitcher weatherIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +82,14 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
         });
         Button getWeather = findViewById(R.id.button);
 
-        final TextSwitcher weatherIcon = findViewById(R.id.tv_weatherIcon);
+        weatherIcon = findViewById(R.id.tv_weatherIcon);
         Animation in = AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_in);
         Animation out = AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_out);
         weatherIcon.setInAnimation(in);
         weatherIcon.setOutAnimation(out);
+        setupLocation();
 
 
         weatherIcon.setFactory(mFactory);
@@ -81,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
             @Override
             public void onClick(View view) {
                 weatherIcon.setText(getString(R.string.getting_data_icon));
-                RestClient.getWeather(MainActivity.this, new OnSuccessCallback<WeatherModel>() {
+                RestClient.getWeather(25.7, 28.7,MainActivity.this, new OnSuccessCallback<WeatherModel>() {
                     @Override
                     public void onSuccess(WeatherModel weatherModel) {
                         populateScreen(weatherModel);
@@ -98,6 +114,20 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
 
     }
 
+    private void setupLocation() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
+            return;
+        }
+        provider = new LocationGooglePlayServicesProvider();
+        provider.setCheckLocationSettings(true);
+
+        SmartLocation smartLocation = new SmartLocation.Builder(this).logging(true).build();
+
+        smartLocation.location(provider).start(this);
+        smartLocation.activity().start(this);
+    }
+
     @Override
     protected void onPause() {
         if (sd != null)
@@ -110,6 +140,21 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
         super.onResume();
         if (sd != null)
             sd.start(sensorManager);
+    }
+
+    private void getLocationWeather(Location location) {
+        weatherIcon.setText(getString(R.string.getting_data_icon));
+        RestClient.getWeather(location.getLongitude(),location.getLatitude(),  MainActivity.this, new OnSuccessCallback<WeatherModel>() {
+            @Override
+            public void onSuccess(WeatherModel weatherModel) {
+                populateScreen(weatherModel);
+            }
+        }, new OnErrorCallback() {
+            @Override
+            public void onError(String message) {
+                message.toString();
+            }
+        });
     }
 
     private void populateScreen(WeatherModel weatherModel) {
@@ -159,4 +204,16 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.Lis
         }
         return icon;
     }
+
+    @Override
+    public void onActivityUpdated(DetectedActivity detectedActivity) {
+        //Not needed really
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+        if (location != null)
+            getLocationWeather(location);
+    }
+
 }
