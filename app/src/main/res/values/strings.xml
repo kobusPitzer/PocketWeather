@@ -24,6 +24,7 @@
     <!--User text-->
     <string name="ok">Why not</string>
     <string name="cancel">No thanks</string>
+    <string name="shake_title">Whoa there</string>
     <string name="shake_detected">Things seem shaky. Want an update?</string>
     <string name="min_temperature">Min of %1$d</string>
     <string name="max_temperature">Max of %1$d</string>

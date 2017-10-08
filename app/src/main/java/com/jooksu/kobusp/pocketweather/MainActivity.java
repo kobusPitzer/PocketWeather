@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements
     private ShakeDetector sd;
     private SensorManager sensorManager;
     private TextSwitcher weatherIcon;
-    private TextView tvPlace = findViewById(R.id.tv_place);
-    private TextView tvMin = findViewById(R.id.tv_min);
-    private TextView tvMax = findViewById(R.id.tv_max);
-    private TextView tvDate = findViewById(R.id.tv_date);
-    private TextView tvCelsius = findViewById(R.id.tv_celsius);
+    private TextView tvPlace;
+    private TextView tvMin;
+    private TextView tvMax;
+    private TextView tvDate;
+    private TextView tvCelsius;
     private SmartLocation smartLocation;
     private boolean dialogIsShown = false;
     private LocationGooglePlayServicesProvider provider;
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements
     private void showAskForUpdate() {
         dialogIsShown = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(R.string.shake_detected)
+        builder.setTitle(R.string.shake_title)
                 .setMessage(R.string.shake_detected)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
