@@ -4,8 +4,11 @@
     <dimen name="icon_size">95sp</dimen>
 
     <!--Text sizes-->
-    <dimen name="text_small">20sp</dimen>
-    <dimen name="text_large">30sp</dimen>
+    <dimen name="text_small">18sp</dimen>
     <dimen name="text_medium">25sp</dimen>
+    <dimen name="text_large">30sp</dimen>
+
+    <!--Text sizes-->
+    <dimen name="padding_text_small">20dp</dimen>
 
 </resources>

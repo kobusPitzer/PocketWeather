@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Resources -->
-    <string name="app_name">Pocket \n Weather</string>
+    <string name="app_name">Pocket\n Weather</string> <!--This is on purpose -->
     <string name="celsius_text">\u00B0C to \u00B0F</string>
     <string name="celsius_description_text">Degrees Celsius to Fahrenheit</string>
 
@@ -26,7 +26,7 @@
     <string name="cancel">No thanks</string>
     <string name="shake_title">Whoa there</string>
     <string name="shake_detected">Things seem shaky. Want an update?</string>
-    <string name="min_temperature">Min of %1$d</string>
-    <string name="max_temperature">Max of %1$d</string>
+    <string name="min_temperature">Min %1$d</string>
+    <string name="max_temperature">Max %1$d</string>
 
 </resources>

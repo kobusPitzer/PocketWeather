@@ -248,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements
                         dialogIsShown = false;
                     }
                 })
+                .setCancelable(false)
                 .create()
                 .show();
     }
