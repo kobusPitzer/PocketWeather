@@ -42,6 +42,11 @@ import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider;
 
+/**
+ * Created by kobusp on 2017/10/06.
+ * Main activity
+ */
+
 import static com.squareup.seismic.ShakeDetector.SENSITIVITY_LIGHT;
 
 public class MainActivity extends AppCompatActivity implements
@@ -83,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         setContentView(R.layout.activity_main);
         setupShakeSensor();
+        setupCelsiusJoke();
+        setupWeatherText();
+        setupLocation();
+    }
+
+    private void setupCelsiusJoke() {
         final ImageView joke = findViewById(R.id.iv_wrongDegrees);
         ConstraintLayout layout = findViewById(R.id.constraint);
         layout.setOnClickListener(new View.OnClickListener() {
@@ -100,19 +111,18 @@ public class MainActivity extends AppCompatActivity implements
                 hideText(true);
             }
         });
+    }
 
+    private void setupWeatherText() {
         weatherIcon = findViewById(R.id.tv_weatherIcon);
         Animation in = AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_in);
         Animation out = AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_out);
+
         weatherIcon.setInAnimation(in);
         weatherIcon.setOutAnimation(out);
-        setupLocation();
-
-
         weatherIcon.setFactory(mFactory);
-
     }
 
     private void hideText(boolean isHidden) {
@@ -121,14 +131,14 @@ public class MainActivity extends AppCompatActivity implements
         tvMax = findViewById(R.id.tv_max);
         tvDate = findViewById(R.id.tv_date);
         tvCelsius = findViewById(R.id.tv_celsius);
+
         if (isHidden) {
             tvPlace.setVisibility(View.INVISIBLE);
             tvMin.setVisibility(View.INVISIBLE);
             tvMax.setVisibility(View.INVISIBLE);
             tvDate.setVisibility(View.INVISIBLE);
             tvCelsius.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             tvPlace.setVisibility(View.VISIBLE);
             tvMin.setVisibility(View.VISIBLE);
             tvMax.setVisibility(View.VISIBLE);
@@ -142,11 +152,11 @@ public class MainActivity extends AppCompatActivity implements
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
             return;
         }
+
         provider = new LocationGooglePlayServicesProvider();
         provider.setCheckLocationSettings(true);
 
         smartLocation = new SmartLocation.Builder(this).logging(true).build();
-
         smartLocation.location(provider).start(this);
         smartLocation.activity().start(this);
     }
@@ -214,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         tvPlace.setText(getLocationName(weatherModel, location));
-        tvMin.setText(getString(R.string.min_temperature,Math.round(weatherModel.getLocationWeatherDetails().getMinTemperature())));
-        tvMax.setText(getString(R.string.max_temperature,Math.round(weatherModel.getLocationWeatherDetails().getMaxTemperature())));
+        tvMin.setText(getString(R.string.min_temperature, Math.round(weatherModel.getLocationWeatherDetails().getMinTemperature())));
+        tvMax.setText(getString(R.string.max_temperature, Math.round(weatherModel.getLocationWeatherDetails().getMaxTemperature())));
         SimpleDateFormat format = new SimpleDateFormat("EEE, MMM d", Locale.ENGLISH);
         tvDate.setText(format.format(new Date()));
 
@@ -300,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityUpdated(DetectedActivity detectedActivity) {
-        //Not needed really
+        //Library wants it but not needed with my current implementation
     }
 
     @Override

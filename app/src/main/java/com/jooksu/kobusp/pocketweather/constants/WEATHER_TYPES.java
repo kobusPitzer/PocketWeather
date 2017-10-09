@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * Created by kobusp on 2017/10/06.
  * Weather types
  */
 
