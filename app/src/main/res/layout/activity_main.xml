@@ -15,7 +15,9 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textGrey"
         android:gravity="center_horizontal"
+        android:includeFontPadding="false"
         android:textSize="@dimen/text_small"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tv_weatherIcon"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -26,6 +28,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textGrey"
         android:textSize="@dimen/icon_size"
+        android:includeFontPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -65,13 +68,17 @@
         android:layout_marginTop="@dimen/padding_text_small"
         app:layout_constraintTop_toBottomOf="@+id/tv_max"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/tv_celsius"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/textGrey"
+        android:layout_marginBottom="@dimen/padding_text_minimum"
+        android:layout_marginEnd="@dimen/padding_text_minimum"
+        android:includeFontPadding="false"
         android:text="@string/celsius_text"
         android:textSize="@dimen/text_small"
         app:layout_constraintBottom_toBottomOf="parent"
