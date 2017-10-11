@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather;
+package com.jooksu.kobusp.pocketweather2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.jooksu.kobusp.pocketweather", appContext.getPackageName());
+        assertEquals("com.jooksu.kobusp.pocketweather2", appContext.getPackageName());
     }
 }

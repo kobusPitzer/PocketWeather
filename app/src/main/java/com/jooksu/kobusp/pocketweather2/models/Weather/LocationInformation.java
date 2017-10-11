@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather.models.Weather;
+package com.jooksu.kobusp.pocketweather2.models.Weather;
 
 /**
  * Created by kobusp on 2017/10/06.

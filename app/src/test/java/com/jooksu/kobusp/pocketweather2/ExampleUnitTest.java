@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather;
+package com.jooksu.kobusp.pocketweather2;
 
 import org.junit.Test;
 

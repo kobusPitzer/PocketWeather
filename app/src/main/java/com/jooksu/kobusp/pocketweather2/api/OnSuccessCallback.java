@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather.api;
+package com.jooksu.kobusp.pocketweather2.api;
 
 /**
  * Created by kobusp on 2017/10/06.

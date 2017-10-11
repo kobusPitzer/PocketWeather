@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/mainBackground"
     android:clickable="true"
-    tools:context="com.jooksu.kobusp.pocketweather.MainActivity"
+    tools:context="com.jooksu.kobusp.pocketweather2.MainActivity"
     android:id="@+id/constraint">
 
     <TextView

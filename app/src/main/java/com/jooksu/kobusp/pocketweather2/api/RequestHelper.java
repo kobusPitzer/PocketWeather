@@ -1,10 +1,10 @@
-package com.jooksu.kobusp.pocketweather.api;
+package com.jooksu.kobusp.pocketweather2.api;
 
 import android.content.Context;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.jooksu.kobusp.pocketweather.constants.NETWORK;
+import com.jooksu.kobusp.pocketweather2.constants.NETWORK;
 
 /**
  * Created by kobusp on 2017/10/06.

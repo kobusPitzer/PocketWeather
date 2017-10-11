@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather.api;
+package com.jooksu.kobusp.pocketweather2.api;
 
 import android.content.Context;
 

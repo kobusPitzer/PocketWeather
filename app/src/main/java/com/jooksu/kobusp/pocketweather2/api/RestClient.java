@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather.api;
+package com.jooksu.kobusp.pocketweather2.api;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,9 +8,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.jooksu.kobusp.pocketweather.models.Weather.WeatherModel;
+import com.jooksu.kobusp.pocketweather2.models.Weather.WeatherModel;
 
-import static com.jooksu.kobusp.pocketweather.constants.APIStuff.API_KEY_OPENWEATHER;
+import static com.jooksu.kobusp.pocketweather2.constants.APIStuff.API_KEY_OPENWEATHER;
 
 /**
  * Created by kobusp on 2017/10/06.

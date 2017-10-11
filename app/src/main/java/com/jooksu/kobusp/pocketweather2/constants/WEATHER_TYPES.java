@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather.constants;
+package com.jooksu.kobusp.pocketweather2.constants;
 
 import android.support.annotation.IntDef;
 

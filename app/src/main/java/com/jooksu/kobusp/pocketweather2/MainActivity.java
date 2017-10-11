@@ -1,4 +1,4 @@
-package com.jooksu.kobusp.pocketweather;
+package com.jooksu.kobusp.pocketweather2;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -26,12 +26,12 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.google.android.gms.location.DetectedActivity;
-import com.jooksu.kobusp.pocketweather.api.OnErrorCallback;
-import com.jooksu.kobusp.pocketweather.api.OnSuccessCallback;
-import com.jooksu.kobusp.pocketweather.api.RestClient;
-import com.jooksu.kobusp.pocketweather.constants.WEATHER_TYPES;
-import com.jooksu.kobusp.pocketweather.models.Weather.WeatherInformation;
-import com.jooksu.kobusp.pocketweather.models.Weather.WeatherModel;
+import com.jooksu.kobusp.pocketweather2.api.OnErrorCallback;
+import com.jooksu.kobusp.pocketweather2.api.OnSuccessCallback;
+import com.jooksu.kobusp.pocketweather2.api.RestClient;
+import com.jooksu.kobusp.pocketweather2.constants.WEATHER_TYPES;
+import com.jooksu.kobusp.pocketweather2.models.Weather.WeatherInformation;
+import com.jooksu.kobusp.pocketweather2.models.Weather.WeatherModel;
 import com.squareup.seismic.ShakeDetector;
 
 import java.text.SimpleDateFormat;
